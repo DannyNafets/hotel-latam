@@ -4,6 +4,10 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import controller.UsuarioController;
+import modelo.Usuario;
+
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -20,15 +24,13 @@ import java.awt.event.MouseMotionAdapter;
 
 public class Login extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtUsuario;
 	private JPasswordField txtContrasena;
 	int xMouse, yMouse;
 	private JLabel labelExit;
+	private UsuarioController usuarioController;
 
 	/**
 	 * Launch the application.
@@ -50,6 +52,9 @@ public class Login extends JFrame {
 	 * Create the frame.
 	 */
 	public Login() {
+		
+		this.usuarioController = new UsuarioController();
+		
 		setResizable(false);
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -125,7 +130,7 @@ public class Login extends JFrame {
 		txtUsuario.setFont(new Font("Roboto", Font.PLAIN, 16));
 		txtUsuario.setText("Ingrese su nombre de usuario");
 		txtUsuario.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-		txtUsuario.setForeground(SystemColor.activeCaptionBorder);
+		txtUsuario.setForeground(new Color(0, 0, 0));
 		txtUsuario.setBounds(65, 256, 324, 32);
 		panel.add(txtUsuario);
 		txtUsuario.setColumns(10);
@@ -192,7 +197,7 @@ public class Login extends JFrame {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Login();
+				entrar();
 			}
 		});
 		btnLogin.setBackground(SystemColor.textHighlight);
@@ -208,6 +213,36 @@ public class Login extends JFrame {
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setFont(new Font("Roboto", Font.PLAIN, 18));
 		
+		JPanel btnCrearUsr = new JPanel();
+		btnCrearUsr.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnCrearUsr.setBackground(new Color(0, 156, 223));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnCrearUsr.setBackground(SystemColor.textHighlight);
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				CrearUsuario crearUsuario = new CrearUsuario();
+				crearUsuario.setVisible(true);
+		        dispose();
+			}
+		});
+		btnCrearUsr.setBackground(SystemColor.textHighlight);
+		btnCrearUsr.setBounds(200, 431, 162, 44);
+		panel.add(btnCrearUsr);
+		btnCrearUsr.setLayout(null);
+		btnCrearUsr.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+		
+		JLabel lblNewLabel2 = new JLabel("CREAR USUARIO");
+		lblNewLabel2.setBounds(0, 0, 162, 44);
+		btnCrearUsr.add(lblNewLabel2);
+		lblNewLabel2.setForeground(SystemColor.controlLtHighlight);
+		lblNewLabel2.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel2.setFont(new Font("Roboto", Font.PLAIN, 18));
+		
 		JLabel lblNewLabel_1 = new JLabel("");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setIcon(new ImageIcon(Login.class.getResource("/imagenes/lOGO-50PX.png")));
@@ -219,7 +254,6 @@ public class Login extends JFrame {
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				headerMouseDragged(e);
-			     
 			}
 		});
 		header.addMouseListener(new MouseAdapter() {
@@ -234,19 +268,29 @@ public class Login extends JFrame {
 		header.setLayout(null);
 	}
 	
-	private void Login() {
-		 String Usuario= " ";
-	     String Contraseña=" ";
 
-	        String contrase=new String (txtContrasena.getPassword());
-
-	        if(txtUsuario.getText().equals(Usuario) && contrase.equals(Contraseña)){
-	            MenuUsuario menu = new MenuUsuario();
-	            menu.setVisible(true);
-	            dispose();	 
-	        }else {
-	            JOptionPane.showMessageDialog(this, "Usuario o Contraseña no válidos");
+	private void entrar() {
+		var usuarios = this.usuarioController.login();
+		String contrase=new String (txtContrasena.getPassword());
+		String usrRegistrado = null;
+		String pswRegistrado = null;
+		
+		for(Usuario usuario : usuarios) {
+			
+	        if(txtUsuario.getText().equals(usuario.getUsuario()) && contrase.equals(usuario.getContrasena())){
+	            usrRegistrado = usuario.getUsuario();
+	            pswRegistrado = usuario.getContrasena();
 	        }
+		}
+		
+		if(txtUsuario.getText().equals(usrRegistrado) && contrase.equals(pswRegistrado)){
+            MenuUsuario menu = new MenuUsuario();
+            menu.setVisible(true);
+            dispose();	 
+        }else {
+        	System.out.println(contrase);
+            JOptionPane.showMessageDialog(this, "Usuario o Contraseña no válidos");
+        }
 	} 
 	 private void headerMousePressed(java.awt.event.MouseEvent evt) {
 	        xMouse = evt.getX();

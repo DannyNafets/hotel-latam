@@ -104,11 +104,18 @@ public class MenuPrincipal extends JFrame {
 		panel.add(header);
 		
 		//Botón salir
+		
 		JPanel btnexit = new JPanel();
 		btnexit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.exit(0);
+				System.out.println(btnexit);
+				CuadroOpciones cuadroOpciones = new CuadroOpciones();
+				cuadroOpciones.deseaContinuar();
+				System.out.println(cuadroOpciones.getOpcion());
+				if (cuadroOpciones.getOpcion() == 1) {
+					System.exit(0);
+				}
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -134,6 +141,7 @@ public class MenuPrincipal extends JFrame {
 		labelExit.setFont(new Font("Roboto", Font.PLAIN, 18));
 		
 		//Botón Login
+		
 		JPanel btnLogin = new JPanel(); 
 		btnLogin.setBounds(754, 300, 83, 70);
 		btnLogin.addMouseListener(new MouseAdapter() {

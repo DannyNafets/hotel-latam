@@ -7,20 +7,25 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import java.awt.Color;
 import com.toedter.calendar.JDateChooser;
+
+import controller.HuespedController;
+import controller.ReservaController;
+import modelo.Huesped;
+import modelo.Reserva;
+import modelo.Usuario;
+
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import java.awt.Font;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import java.awt.SystemColor;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.text.Format;
-import java.awt.event.ActionEvent;
+import java.text.SimpleDateFormat;
 import java.awt.Toolkit;
 import javax.swing.SwingConstants;
 import javax.swing.JSeparator;
@@ -38,6 +43,8 @@ public class RegistroHuesped extends JFrame {
 	private JLabel labelExit;
 	private JLabel labelAtras;
 	int xMouse, yMouse;
+	ReservaController reservaController;
+	HuespedController huespedController;
 
 	/**
 	 * Launch the application.
@@ -59,6 +66,9 @@ public class RegistroHuesped extends JFrame {
 	 * Create the frame.
 	 */
 	public RegistroHuesped() {
+		
+		this.reservaController = new ReservaController();
+		this.huespedController = new HuespedController();
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(RegistroHuesped.class.getResource("/imagenes/lOGO-50PX.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -212,6 +222,17 @@ public class RegistroHuesped extends JFrame {
 		txtNreserva.setBorder(javax.swing.BorderFactory.createEmptyBorder());
 		contentPane.add(txtNreserva);
 		
+		// toma el valor de la ultima reserva
+		
+		int idReserva = 0;
+		var reservas = this.reservaController.listar();
+		
+		for (Reserva reserva : reservas) {
+			idReserva = reserva.getId();
+		}
+		
+		txtNreserva.setText(String.valueOf(idReserva));
+		
 		JSeparator separator_1_2 = new JSeparator();
 		separator_1_2.setBounds(560, 170, 289, 2);
 		separator_1_2.setForeground(new Color(12, 138, 199));
@@ -252,11 +273,20 @@ public class RegistroHuesped extends JFrame {
 		btnguardar.setBounds(723, 560, 122, 35);
 		btnguardar.addMouseListener(new MouseAdapter() {
 			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnguardar.setBackground(new Color(0, 156, 223));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnguardar.setBackground(SystemColor.textHighlight);
+			}
+			@Override
 			public void mouseClicked(MouseEvent e) {
+				guardar();
 			}
 		});
 		btnguardar.setLayout(null);
-		btnguardar.setBackground(new Color(12, 138, 199));
+		btnguardar.setBackground(SystemColor.textHighlight);
 		contentPane.add(btnguardar);
 		btnguardar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 		
@@ -316,16 +346,79 @@ public class RegistroHuesped extends JFrame {
 	}
 	
 	
+	private void guardar() {
+		var huespedes = this.huespedController.listar();
+		String telRegistrado = null;
+		String fechaNacimiento = null;
+		
+		for(Huesped huesped : huespedes) {
+			
+	        if(txtTelefono.getText().equals(huesped.getTelefono())){
+	        	telRegistrado = huesped.getTelefono();
+	        }
+		}
+		
+		if(txtTelefono.getText().equals(telRegistrado)){
+			JOptionPane.showMessageDialog(this, "El huesped ya se encuetra registrado");
+            return;
+        }
+		 
+		 if (txtNombre.getText().isBlank() || txtApellido.getText().isBlank() 
+				 || txtNacionalidad.getSelectedItem().toString().isBlank() 
+				 || txtTelefono.getText().isBlank()) {
+	            JOptionPane.showMessageDialog(this, "Todos los campos son requeridos para registrar al Usuario");
+	            return;
+	     }
+		 
+		 Integer Nreserva;
+
+	        try {
+	        	Nreserva = Integer.parseInt(txtNreserva.getText());
+	        } catch (NumberFormatException e) {
+	            JOptionPane.showMessageDialog(this, String
+	                    .format("El campo cantidad debe ser numérico dentro del rango %d y %d.", 0, Integer.MAX_VALUE));
+	            return;
+	        }
+		 
+		 try {
+			 String formato = txtFechaN.getDateFormatString();
+			 java.util.Date fecha = txtFechaN.getDate();
+			 SimpleDateFormat sdf = new SimpleDateFormat(formato);
+			 fechaNacimiento = sdf.format(fecha);
+		 } catch(NullPointerException e) {
+		     JOptionPane.showMessageDialog(this, "Al menos selecciona una fecha", "Error!", JOptionPane.INFORMATION_MESSAGE);
+		 }
+		 
+	     var huesped = new Huesped(
+	    		 txtNombre.getText(),
+	    		 txtApellido.getText(),  
+	    		 fechaNacimiento,
+	    		 txtNacionalidad.getSelectedItem().toString(),
+	    		 txtTelefono.getText(),
+	    		 Nreserva);
+	        
+
+			this.huespedController.guardar(huesped);
+			System.out.println(txtFechaN.getDate());
+
+	        JOptionPane.showMessageDialog(this, "Registrado con éxito!");
+
+	        MenuUsuario menuUsuario= new MenuUsuario();
+	        menuUsuario.setVisible(true);
+	        dispose();
+		}
+		
+
 	//Código que permite mover la ventana por la pantalla según la posición de "x" y "y"	
 	 private void headerMousePressed(java.awt.event.MouseEvent evt) {
 	        xMouse = evt.getX();
 	        yMouse = evt.getY();
-	    }
+	 }
 
-	    private void headerMouseDragged(java.awt.event.MouseEvent evt) {
+	 private void headerMouseDragged(java.awt.event.MouseEvent evt) {
 	        int x = evt.getXOnScreen();
 	        int y = evt.getYOnScreen();
 	        this.setLocation(x - xMouse, y - yMouse);
-}
+	 }
 											
 }
