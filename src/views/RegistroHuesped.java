@@ -222,7 +222,7 @@ public class RegistroHuesped extends JFrame {
 		txtNreserva.setBorder(javax.swing.BorderFactory.createEmptyBorder());
 		contentPane.add(txtNreserva);
 		
-		// toma el valor de la ultima reserva
+		// toma el id de la ultima reserva
 		
 		int idReserva = 0;
 		var reservas = this.reservaController.listar();
@@ -350,6 +350,7 @@ public class RegistroHuesped extends JFrame {
 		var huespedes = this.huespedController.listar();
 		String telRegistrado = null;
 		String fechaNacimiento = null;
+		Integer Nreserva;
 		
 		for(Huesped huesped : huespedes) {
 			
@@ -369,8 +370,6 @@ public class RegistroHuesped extends JFrame {
 	            JOptionPane.showMessageDialog(this, "Todos los campos son requeridos para registrar al Usuario");
 	            return;
 	     }
-		 
-		 Integer Nreserva;
 
 	        try {
 	        	Nreserva = Integer.parseInt(txtNreserva.getText());
@@ -401,11 +400,10 @@ public class RegistroHuesped extends JFrame {
 			this.huespedController.guardar(huesped);
 			System.out.println(txtFechaN.getDate());
 
-	        JOptionPane.showMessageDialog(this, "Registrado con éxito!");
+	        //JOptionPane.showMessageDialog(this, "Registrado con éxito!");
+			Exito exito = new Exito();
+			exito.setVisible(true);
 
-	        MenuUsuario menuUsuario= new MenuUsuario();
-	        menuUsuario.setVisible(true);
-	        dispose();
 		}
 		
 

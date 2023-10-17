@@ -1,5 +1,8 @@
 package modelo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Huesped {
 	
 	private Integer id;
@@ -10,6 +13,7 @@ public class Huesped {
 	private String telefono;
 	private Integer nreserva;
 	private String buscar;
+	private List<Reserva> reservas;
 
 	public Huesped(String nombre, String apellido, String fechaNacimiento, String nacionalidad, String telefono, Integer nreserva) {
 		this.nombre = nombre;
@@ -33,6 +37,18 @@ public class Huesped {
 
 	public Huesped(String buscar) {
 		this.buscar = buscar;
+	}
+
+	public Huesped(Integer id, String nombre, String apellido, String telefono) {
+		this.id = id;
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.telefono = telefono;
+	}
+
+	public Huesped(Integer id, String telefono) {
+		this.id = id;
+		this.nombre = telefono;
 	}
 
 	public String getNombre() {
@@ -64,10 +80,25 @@ public class Huesped {
 		
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
+
+	public void agregar(Reserva reserva) {
+		if (this.reservas == null) {
+			this.reservas = new ArrayList<>();
+		}
 	
+		this.reservas.add(reserva);
+	}
+
+	public List<Reserva> getReservas() {
+		return this.reservas;
+	}
 	
+	@Override
+	public String toString() {
+		return this.nombre;
+	}
 	
 }

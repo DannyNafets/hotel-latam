@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 
 import factory.ConnectionFactory;
 import modelo.Huesped;
+import modelo.Reserva;
 
 public class HuespedDAO {
 	
@@ -67,7 +68,7 @@ public class HuespedDAO {
 		try (con){
 		
 			final PreparedStatement statement = con.prepareStatement("SELECT ID, NOMBRE, APELLIDO,"
-					+ "FECHANACIMIENTO, NACIONALIDAD, TELEFONO, NRESERVA FROM HUESPEDES");
+					+ "FECHANACIMIENTO, NACIONALIDAD, TELEFONO, ID_RESERVA FROM HUESPEDES");
 			
 			try (statement){
 			
@@ -83,7 +84,7 @@ public class HuespedDAO {
 								resultSet.getString("FECHANACIMIENTO"),
 								resultSet.getString("NACIONALIDAD"), 
 								resultSet.getString("TELEFONO"),
-								resultSet.getInt("NRESERVA"));
+								resultSet.getInt("ID_RESERVA"));
 						
 						resultado.add(fila);
 					}
@@ -127,7 +128,7 @@ public class HuespedDAO {
 					+ ", FECHANACIMIENTO = ? "
 					+ ", NACIONALIDAD = ?"
 					+ ", TELEFONO = ?"
-					+ ", NRESERVA = ?"
+					+ ", ID_RESERVA = ?"
 					+ " WHERE ID = ? ");
 			
 			try (statement){
@@ -160,8 +161,8 @@ public class HuespedDAO {
 			
 			final PreparedStatement statement = con.prepareStatement("SELECT ID, NOMBRE, APELLIDO, FECHANACIMIENTO, "
 					+ " NACIONALIDAD, TELEFONO, "
-					+ " NRESERVA FROM HUESPEDES "
-					+ " WHERE APELLIDO = ? || NRESERVA = ?");
+					+ " ID_RESERVA FROM HUESPEDES "
+					+ " WHERE APELLIDO = ? || ID_RESERVA = ?");
 			
 			Huesped fila = null;
 			
@@ -182,7 +183,7 @@ public class HuespedDAO {
 								resultSet.getString("FECHANACIMIENTO"),
 								resultSet.getString("NACIONALIDAD"), 
 								resultSet.getString("TELEFONO"),
-								resultSet.getInt("NRESERVA"));
+								resultSet.getInt("ID_RESERVA"));
 					}
 				}
 			}
@@ -193,5 +194,64 @@ public class HuespedDAO {
 			throw new RuntimeException(e);
 		}
 		return resultado;
+	}
+
+	public List<Huesped> relacionConReservas() {
+		List<Huesped> resultado = new ArrayList<>();
+		
+		try {
+			
+			var querySelect = "SELECT H.ID, H.NOMBRE, H.APELLIDO, H.TELEFONO, "
+					+ "R.ID, R.FECHAENTRADA, R.FECHASALIDA, R.VALOR, R.FORMAPAGO"
+					+ " FROM HUESPEDES H "
+					+ "INNER JOIN RESERVAS R ON H.ID = R.HUESPED_ID";
+			System.out.println(querySelect);
+			
+			final PreparedStatement statement = con.prepareStatement(querySelect);
+			System.out.println(statement);
+			
+			try(statement){
+				
+				statement.execute();
+				
+				final ResultSet resultSet = statement.executeQuery();
+				System.out.println(resultSet);
+				
+				try(resultSet){
+					
+					while(resultSet.next()) {
+						System.out.println("Entra al while");
+						Integer huespedId = resultSet.getInt("ID");
+						String huespedNombre = resultSet.getString("NOMBRE");
+						String huespedApellido = resultSet.getString("APELLIDO");
+						String huespedTelefono = resultSet.getString("TELEFONO");
+						System.out.println(huespedNombre);
+						
+						var huesped = resultado
+								.stream()
+								.filter(hue -> hue.getId().equals(huespedId))
+								.findAny().orElseGet(() -> {
+									Huesped hue = new Huesped(huespedId, huespedTelefono); 
+									
+									resultado.add(hue);
+									
+									return hue;
+								});
+						System.out.println(huesped.getNombre());
+						
+						Reserva reserva = new Reserva(resultSet.getInt("R.ID"), resultSet.getString("R.FECHAENTRADA"),
+								resultSet.getString("R.FECHASALIDA"), resultSet.getString("R.VALOR"), 
+								resultSet.getString("R.FORMAPAGO"));
+						
+						huesped.agregar(reserva);
+					}
+				};
+			}
+		} catch (SQLException e){
+			throw new RuntimeException(e);
+		}
+		System.out.println(resultado);
+		return resultado;
+
 	}
 }

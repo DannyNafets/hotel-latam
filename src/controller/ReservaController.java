@@ -34,4 +34,10 @@ public class ReservaController {
 	public int editar(Integer id, Object fechaEntrada, Object fechaSalida, Double valor, String formaPago) {
 		return reservaDAO.editar(id, fechaEntrada, fechaSalida, valor, formaPago);
 	}
+
+
+	public int agregaHuespedId(Integer id,Integer huespedId) {
+		return reservaDAO.agregaHuespedId(id, huespedId);
+		
+	}
 }

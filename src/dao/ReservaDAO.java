@@ -138,4 +138,26 @@ final private Connection con;
 			throw new RuntimeException(e);
 		}
 	}
+
+	public int agregaHuespedId(Integer id, Integer huespedId) {
+		try (con){
+			final PreparedStatement statement = con.prepareStatement("UPDATE RESERVAS SET "
+					+ "HUESPED_ID = ? "
+					+ "WHERE ID = ?");
+			
+			try (statement){
+				statement.setInt(1, huespedId);
+				statement.setInt(2, id);
+				
+				statement.execute();
+				
+				int updateCount = statement.getUpdateCount();   
+				
+			    return updateCount;
+			}
+			
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

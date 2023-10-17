@@ -22,6 +22,8 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -85,8 +87,6 @@ public class ReservasView extends JFrame {
 		setResizable(false);
 		setLocationRelativeTo(null);
 		setUndecorated(true);
-		
-
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(null);
@@ -278,24 +278,25 @@ public class ReservasView extends JFrame {
 		txtFechaSalida.setFont(new Font("Roboto", Font.PLAIN, 18));
 		txtFechaSalida.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
+				calcularValorReserva();
 			}
 		});
+	
 		txtFechaSalida.setDateFormatString("yyyy-MM-dd");
 		txtFechaSalida.getCalendarButton().setBackground(SystemColor.textHighlight);
 		txtFechaSalida.setBorder(new LineBorder(new Color(255, 255, 255), 0));
 		panel.add(txtFechaSalida);
-
+		
 		txtValor = new JTextField();
 		txtValor.setBackground(SystemColor.text);
 		txtValor.setHorizontalAlignment(SwingConstants.LEFT);
 		txtValor.setForeground(Color.BLACK);
-		txtValor.setBounds(78, 328, 116, 33);
+		txtValor.setBounds(86, 328, 116, 33);
 		txtValor.setEditable(false);
 		txtValor.setFont(new Font("Roboto Black", Font.BOLD, 17));
 		txtValor.setBorder(javax.swing.BorderFactory.createEmptyBorder());
 		panel.add(txtValor);
 		txtValor.setColumns(10);
-
 
 		txtFormaPago = new JComboBox();
 		txtFormaPago.setBounds(68, 417, 289, 38);
@@ -344,7 +345,8 @@ public class ReservasView extends JFrame {
 		btnBusqueda.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {		
+				if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {	
+					guardar();
 					Busqueda registro = new Busqueda();
 					registro.setVisible(true);
 				} else {
@@ -374,57 +376,67 @@ public class ReservasView extends JFrame {
 		lblHuespedes.setBounds(4, -4, 115, 44);
 		btnBusqueda.add(lblHuespedes);
 		
-		JButton btnValor = new JButton("PRECIO");
-		btnValor.setBounds(238, 330, 117, 29);
-		panel.add(btnValor);
-		btnValor.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {		
-					double valorDia = 47;
-					int diaE = txtFechaEntrada.getCalendar().get(Calendar.DAY_OF_MONTH);
-					int diaS = txtFechaSalida.getCalendar().get(Calendar.DAY_OF_MONTH);
-					int mesE = txtFechaEntrada.getCalendar().get(Calendar.MONTH);
-					int mesS = txtFechaSalida.getCalendar().get(Calendar.MONTH);
-					int diasMes;
-					
-					if (mesE == 1 || mesE == 3 || mesE == 5 || mesE == 7 || mesE == 9 || mesE == 11) {
-						diasMes = 32;
-					} else if (diaE == 2) {
-						diasMes = 29;
-					} else {
-						diasMes = 31;
-					}
-					
-					if (mesE > mesS || (mesE == mesS && diaE > diaS) ) {
-						JOptionPane.showMessageDialog(null, "Ingresa fechas correctas");
-					}
-					
-					if (mesE < mesS) {
-						int cantidadDias = diasMes - diaE;
-						cantidadDias += diaS; 
-						txtValor.setText(String.valueOf(valorDia * cantidadDias));
-					}else {
-						int cantidadDias = diaS - diaE + 1;
-						txtValor.setText(String.valueOf(valorDia * cantidadDias));
-					}
-					
-				} else {
-					JOptionPane.showMessageDialog(null, "Debes llenar todos los campos.");
-				}
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				btnValor.setBackground(new Color(0, 156, 223));
-			}
-		
-			@Override
-			public void mouseExited(MouseEvent e) {
-				btnValor.setBackground(SystemColor.textHighlight);
-			}
-		});
+		JLabel signoDolar = new JLabel("$");
+		signoDolar.setForeground(SystemColor.textInactiveText);
+		signoDolar.setFont(new Font("Dialog", Font.PLAIN, 18));
+		signoDolar.setBounds(72, 338, 11, 14);
+		panel.add(signoDolar);
 	}
 		
+
+	protected void calcularValorReserva() {
+		if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {		
+			double valorDia = 47;
+			int diaE = txtFechaEntrada.getCalendar().get(Calendar.DAY_OF_MONTH);
+			int diaS = txtFechaSalida.getCalendar().get(Calendar.DAY_OF_MONTH);
+			int mesE = txtFechaEntrada.getCalendar().get(Calendar.MONTH);
+			int mesS = txtFechaSalida.getCalendar().get(Calendar.MONTH);
+			int diasMes;
+			int hoy = LocalDateTime.now().getDayOfMonth();
+								
+			// hace una eleccion para asignar los dias que tiene cada mes
+			
+			if (mesE == 1 || mesE == 3 || mesE == 5 || mesE == 7 || mesE == 9 || mesE == 11) {
+				diasMes = 32;
+			} else if (diaE == 2) {
+				diasMes = 29;
+			} else {
+				diasMes = 31;
+			}
+			
+			fechasCorrectas(mesE, mesS, diaE, diaS, hoy);
+			
+			if (mesE < mesS) {
+				int cantidadDias = diasMes - diaE;
+				cantidadDias += diaS; 
+				txtValor.setText(String.valueOf(valorDia * cantidadDias));
+			}else {
+				int cantidadDias = diaS - diaE + 1;
+				txtValor.setText(String.valueOf(valorDia * cantidadDias));
+			}
+			
+		} // else {
+//			JOptionPane.showMessageDialog(null, "Debes llenar todos los campos.");
+//		}
+		
+	}
+
+	private void fechasCorrectas(int mesE, int mesS, int diaE, int diaS, int hoy) {
+		// hace una comparacion entre las fechas de tal modo que si selecciona una fecha anterior envia un mensaje de alerta
+		
+		if (mesE > mesS || (mesE == mesS && diaE > diaS) || diaE < hoy) {
+			Object[] options = {"OK"};
+			JOptionPane.showOptionDialog(null, "Ingresa las fechas correctas", "Warning", 
+					JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, 
+					null, options, options[0]);
+			
+			ReservasView reserva = new ReservasView();
+			reserva.setVisible(true);
+//						dispose();
+			return;
+		}
+		
+	}
 
 	private void guardar() {
 		 String fechaEntrada = null;
@@ -457,7 +469,8 @@ public class ReservasView extends JFrame {
 
 			this.reservaController.guardar(reservas);
 
-	        JOptionPane.showMessageDialog(this, "Registrado con éxito!");
+			Exito exito = new Exito();
+			exito.setVisible(true);
 
 		}
 

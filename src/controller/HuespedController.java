@@ -37,4 +37,8 @@ public class HuespedController {
 		return huespedDAO.buscar(buscar, buscarNum);
 	}
 
+	public List<Huesped> cargarRelacion() {
+		return this.huespedDAO.relacionConReservas();
+	}
+
 }

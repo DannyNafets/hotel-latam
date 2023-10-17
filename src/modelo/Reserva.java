@@ -27,6 +27,13 @@ public class Reserva {
 
 	}
 
+
+	public Reserva(int id, String fechaEntrada, String fechaSalida) {
+		this.id = id;
+		this.fechaEntrada = fechaEntrada;
+		this.fechaSalida = fechaSalida;
+	}
+
 	public String getFechaEntrada() {
 		return this.fechaEntrada;
 	}

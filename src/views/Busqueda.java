@@ -16,6 +16,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ImageIcon;
 import java.awt.Color;
+import java.awt.Container;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -143,7 +145,6 @@ public class Busqueda extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				cont = 1;
 				System.out.println(cont);
-				
 			}
 
 		});
@@ -170,7 +171,6 @@ public class Busqueda extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				cont = 2;
 				System.out.println(cont);
-				
 			}
 
 		});
@@ -186,7 +186,7 @@ public class Busqueda extends JFrame {
 		modeloUsuario.addColumn("Nacionalidad");
 		modeloUsuario.addColumn("Telefono");
 		JScrollPane scroll_tableUsuarios = new JScrollPane(tbUsuarios);
-		panel.addTab("Usuarios", new ImageIcon(Busqueda.class.getResource("/imagenes/pessoas.png")), scroll_tableUsuarios, null);
+		panel.addTab("Usuarios", new ImageIcon(Busqueda.class.getResource("/imagenes/usuario.png")), scroll_tableUsuarios, null);
 		scroll_tableUsuarios.setVisible(true);
 		
 		cargarTabla();
@@ -199,8 +199,8 @@ public class Busqueda extends JFrame {
 				
 			}
 
-		});
-		
+		});		
+			
 		JLabel lblNewLabel_2 = new JLabel("");
 		lblNewLabel_2.setIcon(new ImageIcon(Busqueda.class.getResource("/imagenes/Ha-100px.png")));
 		lblNewLabel_2.setBounds(56, 51, 104, 107);
@@ -354,8 +354,10 @@ public class Busqueda extends JFrame {
 		btnSeleccionar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				String dato=String.valueOf(modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(),0));
-				System.out.println(dato);
+				String id=String.valueOf(modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(),0));
+				System.out.println(id);
+				Integer huespedId = Integer.valueOf(id);
+				agregaHuespedId(huespedId);
 			}
 		});
 		btnSeleccionar.setLayout(null);
@@ -370,9 +372,34 @@ public class Busqueda extends JFrame {
 		lblSeleccionar.setFont(new Font("Dialog", Font.PLAIN, 18));
 		lblSeleccionar.setBounds(0, 0, 134, 35);
 		btnSeleccionar.add(lblSeleccionar);
+		
+		JPanel btnRelacionReservas = new JPanel();
+		btnRelacionReservas.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				abrirRelacion();
+			}
+		});
+		btnRelacionReservas.setLayout(null);
+		btnRelacionReservas.setBackground(new Color(12, 138, 199));
+		btnRelacionReservas.setBounds(343, 508, 134, 35);
+		contentPane.add(btnRelacionReservas);
+		
+		JLabel lblRelacionReservas = new JLabel("RELACION");
+		lblRelacionReservas.setHorizontalAlignment(SwingConstants.CENTER);
+		lblRelacionReservas.setForeground(Color.WHITE);
+		lblRelacionReservas.setFont(new Font("Dialog", Font.PLAIN, 18));
+		lblRelacionReservas.setBounds(0, 0, 134, 35);
+		btnRelacionReservas.add(lblRelacionReservas);
 		setResizable(false);
 	}
 	
+
+	protected void abrirRelacion() {
+		new RelacionHuespedReservaFrame(this);
+		
+	}
+
 	// clase Buscar
 	
 	protected void buscar() {
@@ -418,6 +445,25 @@ public class Busqueda extends JFrame {
 	            return false;
 	        }
 	    }
+	 
+	 private void agregaHuespedId(Integer huespedId) {
+			if (cont == 2) {
+				if (tieneFilaElegidaHuesped()) {
+		            JOptionPane.showMessageDialog(this, "Por favor, elije un item");
+		            return;
+		        }
+				
+				int idReserva = 0;
+				var reservas = this.reservaController.listar();
+				
+				for (Reserva reserva : reservas) {
+					idReserva = reserva.getId();
+				}
+				
+				this.reservaController.agregaHuespedId(idReserva, huespedId);
+			}
+			
+		} 
 
 	private void editar() {
 		
@@ -608,7 +654,7 @@ public class Busqueda extends JFrame {
 	        				huesped.getNreserva()
 		    		})); 	
 	 }
-	 
+ 
 	 
 	//Código que permite mover la ventana por la pantalla según la posición de "x" y "y"
 		 private void headerMousePressed(java.awt.event.MouseEvent evt) {
