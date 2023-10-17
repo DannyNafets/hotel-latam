@@ -21,7 +21,7 @@ a {
 
 ## Menu principal
 
-<img style="padding-left: 130px;" src="/Users/dannymendez/Documents/Oracle-ONE-Next-Education/hotel-latam/src/imagenes2/Menuprincipal.png" alt="Menu Principal" width="800" >
+<img style="padding-left: 130px;" src="https://github.com/DannyNafets/hotel-latam/blob/master/src/imagenes2/Menuprincipal.png" alt="Menu Principal" width="800" >
 
 <div style="padding: 20px 20px 10px 50px;"><p>El programa inicia con el menu principal, donde encontraremos un botón que nos dará acceso a una ventana donde el usuario podra acceder a la información. </p></div>
 
