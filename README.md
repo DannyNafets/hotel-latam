@@ -2,7 +2,7 @@
 
 <div align = "center"><img = 
 
-![descripción de la imágen](/Users/dannymendez/Documents/Oracle-ONE-Next-Education/hotel-latam/src/imagenes/aH-150px.png)</div>
+![descripción de la imágen](https://github.com/DannyNafets/hotel-latam/blob/master/src/imagenes/aH-150px.png)</div>
 
 ## Tabla de Contenido
 - [Menu principal](#menu-principal)
@@ -13,11 +13,6 @@
 - [Registro de Huespedes](#registro-de-huespedes)
 - [Busqueda](#busqueda)
 
-<style>
-a {
-  text-decoration: none;
-}
-</style>
 
 ## Menu principal
 
@@ -29,7 +24,7 @@ a {
 
 ## Login
 
-<img style="padding-left: 130px;" src="/Users/dannymendez/Documents/Oracle-ONE-Next-Education/hotel-latam/src/imagenes2/Login.png" alt="Login" width="800" >
+<img style="padding-left: 130px;" src="https://github.com/DannyNafets/hotel-latam/blob/master/src/imagenes2/Login.png" alt="Login" width="800" >
 
 <div style="padding: 20px 20px 10px 50px;"><p>Cuando entramos a la ventana de Login encontramos dos text edit donde:</p>
 
@@ -44,7 +39,7 @@ a {
 
 ## Registro de Usuario
 
-<img style="padding-left: 130px;" src="/Users/dannymendez/Documents/Oracle-ONE-Next-Education/hotel-latam/src/imagenes2/RrgistroUsuario.png" alt="Registro de Usuario" width="800" >
+<img style="padding-left: 130px;" src="https://github.com/DannyNafets/hotel-latam/blob/master/src/imagenes2/RrgistroUsuario.png" alt="Registro de Usuario" width="800" >
 
 <div style="padding: 20px 20px 10px 50px;"><p>En esta ventana se podra hacer registro de un usuario o empleado quien podra hacer las reservas del hotel. </p></div>
 
@@ -52,7 +47,7 @@ a {
 
 ## Menu de Usuario
 
-<img style="padding-left: 130px;" src="/Users/dannymendez/Documents/Oracle-ONE-Next-Education/hotel-latam/src/imagenes2/MenuUsuario.png" alt="Menu de Usuario" width="800" >
+<img style="padding-left: 130px;" src="https://github.com/DannyNafets/hotel-latam/blob/master/src/imagenes2/MenuUsuario.png" alt="Menu de Usuario" width="800" >
 
 <div style="padding: 20px 20px 10px 50px;"><p>Una vez el usuario haya registrado el usuario podra ingresar al menu del usuario que tendra lo siguiente:</p>
 
@@ -67,7 +62,7 @@ a {
 
 ## Registro de Reservas
 
-<img style="padding-left: 130px;" src="/Users/dannymendez/Documents/Oracle-ONE-Next-Education/hotel-latam/src/imagenes2/SistemaReserva.png" alt="Registro de Reservas" width="800" >
+<img style="padding-left: 130px;" src="https://github.com/DannyNafets/hotel-latam/blob/master/src/imagenes2/SistemaReserva.png" alt="Registro de Reservas" width="800" >
 
 <div style="padding: 20px 20px 10px 50px;"><p>En esta ventana podremos hacer la reserva del hotel y encontraremos:</p>
 
@@ -84,7 +79,7 @@ a {
 
 ## Registro de Huespedes
 
-<img style="padding-left: 130px;" src="/Users/dannymendez/Documents/Oracle-ONE-Next-Education/hotel-latam/src/imagenes2/RegistroHuesped.png" alt="Registro de huespedes" width="800" >
+<img style="padding-left: 130px;" src="https://github.com/DannyNafets/hotel-latam/blob/master/src/imagenes2/RegistroHuesped.png" alt="Registro de huespedes" width="800" >
 
 <div style="padding: 20px 20px 10px 50px;"><p>Cuando el usuario da click al boton "REGISTRAR" en la ventana de las reservas abre este formulario para que el hueped pueda ingresar sus datos. </p></div>
 
@@ -92,7 +87,7 @@ a {
 
 ## Busqueda
 
-<img style="padding-left: 130px;" src="/Users/dannymendez/Documents/Oracle-ONE-Next-Education/hotel-latam/src/imagenes2/Busqueda.png" alt="Busqueda" width="800" >
+<img style="padding-left: 130px;" src="https://github.com/DannyNafets/hotel-latam/blob/master/src/imagenes2/Busqueda.png" alt="Busqueda" width="800" >
 
 <div style="padding: 20px 20px 10px 50px;"><p>En esta ventana encontraremos:</p>
 
